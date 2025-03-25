@@ -149,7 +149,8 @@ make test
 ## Additional Commands
 
 - `make down` - Stop all containers
-- `make restart` - Restart all containers
 - `make logs` - View logs
 - `make clean` - Remove containers, images, and volumes
 - `make help` - List of available commands
+## Example .env
+![image](https://github.com/user-attachments/assets/ac16e011-aea1-46a6-9316-f4afed77da9b)
