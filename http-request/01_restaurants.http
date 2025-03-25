@@ -1,0 +1,79 @@
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@restaurantId = replace_with_restaurant_id
+@factId = replace_with_fact_id
+
+### Get all restaurants
+GET {{baseUrl}}/restaurants
+Accept: application/json
+
+### Create a new restaurant
+POST {{baseUrl}}/restaurants
+Content-Type: application/json
+
+{
+  "name": "La Trattoria",
+  "address": "123 Main Street, New York, NY 10001",
+  "cuisine": "Italian",
+  "description": "Authentic Italian cuisine in the heart of New York",
+  "contact_email": "info@latrattoria.com",
+  "contact_phone": "+1 (212) 555-1234",
+  "facts": [
+    "Our pasta is made fresh daily",
+    "We use only organic ingredients",
+    "Our chef trained in Naples for 15 years"
+  ]
+}
+
+### Get restaurant by ID
+GET {{baseUrl}}/restaurants/{{restaurantId}}
+Accept: application/json
+
+### Update restaurant
+PUT {{baseUrl}}/restaurants/{{restaurantId}}
+Content-Type: application/json
+
+{
+  "name": "La Trattoria Italiana",
+  "address": "123 Main Street, New York, NY 10001",
+  "cuisine": "Italian",
+  "description": "Authentic Italian cuisine in the heart of New York since 1985",
+  "contact_email": "info@latrattoria.com",
+  "contact_phone": "+1 (212) 555-1234"
+}
+
+### Delete restaurant
+DELETE {{baseUrl}}/restaurants/{{restaurantId}}
+Accept: application/json
+
+### Add a fact to a restaurant
+POST {{baseUrl}}/restaurants/{{restaurantId}}/facts
+Content-Type: application/json
+
+{
+  "content": "We grow our own herbs on our rooftop garden"
+}
+
+### Get restaurant facts
+GET {{baseUrl}}/restaurants/{{restaurantId}}/facts
+Accept: application/json
+
+### Get random facts
+GET {{baseUrl}}/facts/random?count=3
+Accept: application/json
+
+### Set working hours
+POST {{baseUrl}}/restaurants/{{restaurantId}}/working-hours
+Content-Type: application/json
+
+{
+  "week_day": 1,
+  "open_time": "10:00",
+  "close_time": "22:00",
+  "valid_from": "2025-01-01T00:00:00Z",
+  "valid_to": "2025-12-31T00:00:00Z"
+}
+
+### Get working hours
+GET {{baseUrl}}/restaurants/{{restaurantId}}/working-hours
+Accept: application/json 

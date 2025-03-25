@@ -1,0 +1,45 @@
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@userId = replace_with_user_id
+
+### Create a new user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1 (212) 555-6789"
+}
+
+### Create another user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "phone": "+1 (212) 555-9876"
+}
+
+### Get user by ID
+GET {{baseUrl}}/users/{{userId}}
+Accept: application/json
+
+### Update user
+PUT {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+
+{
+  "name": "John A. Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1 (212) 555-6789"
+}
+
+### Get user bookings
+GET {{baseUrl}}/users/{{userId}}/bookings
+Accept: application/json
+
+### Get user notifications
+GET {{baseUrl}}/users/{{userId}}/notifications
+Accept: application/json 

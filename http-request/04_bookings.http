@@ -1,0 +1,79 @@
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@restaurantId = replace_with_restaurant_id
+@userId = replace_with_user_id
+@bookingId = replace_with_booking_id
+@alternativeId = replace_with_alternative_id
+@date = 2023-04-15
+
+### Create a booking
+POST {{baseUrl}}/bookings
+Content-Type: application/json
+
+{
+  "restaurant_id": "{{restaurantId}}",
+  "user_id": "{{userId}}",
+  "date": "2025-04-15T00:00:00Z",
+  "time": "19:00",
+  "duration": 120,
+  "guests_count": 4,
+  "comment": "Would like a table near the window if possible"
+}
+
+### Get booking by ID
+GET {{baseUrl}}/bookings/{{bookingId}}
+Accept: application/json
+
+### Confirm booking
+POST {{baseUrl}}/bookings/{{bookingId}}/confirm
+Accept: application/json
+
+### Reject booking
+POST {{baseUrl}}/bookings/{{bookingId}}/reject
+Content-Type: application/json
+
+{
+  "reason": "Unfortunately, we are fully booked at that time"
+}
+
+### Cancel booking
+POST {{baseUrl}}/bookings/{{bookingId}}/cancel
+Accept: application/json
+
+### Complete booking
+POST {{baseUrl}}/bookings/{{bookingId}}/complete
+Accept: application/json
+
+### Suggest alternative time
+POST {{baseUrl}}/bookings/{{bookingId}}/alternative
+Content-Type: application/json
+
+{
+  "date": "{{date}}",
+  "time": "20:30",
+  "message": "Unfortunately, all tables at 19:00 are booked. We suggest a time at 20:30."
+}
+
+### Accept alternative
+POST {{baseUrl}}/bookings/alternatives/{{alternativeId}}/accept
+Accept: application/json
+
+### Reject alternative
+POST {{baseUrl}}/bookings/alternatives/{{alternativeId}}/reject
+Accept: application/json
+
+### Get restaurant bookings
+GET {{baseUrl}}/restaurants/{{restaurantId}}/bookings
+Accept: application/json
+
+### Get restaurant bookings with status filter
+GET {{baseUrl}}/restaurants/{{restaurantId}}/bookings?status=confirmed
+Accept: application/json
+
+### Get restaurant bookings with date filter
+GET {{baseUrl}}/restaurants/{{restaurantId}}/bookings?date={{date}}
+Accept: application/json
+
+### Get restaurant bookings with both status and date filters
+GET {{baseUrl}}/restaurants/{{restaurantId}}/bookings?status=confirmed&date={{date}}
+Accept: application/json 

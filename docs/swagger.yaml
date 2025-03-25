@@ -1,0 +1,1553 @@
+basePath: /api/v1
+definitions:
+  domain.Availability:
+    properties:
+      capacity:
+        type: integer
+      date:
+        type: string
+      id:
+        type: string
+      reserved:
+        type: integer
+      restaurant_id:
+        type: string
+      time_slot:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.Booking:
+    properties:
+      alternatives:
+        items:
+          $ref: '#/definitions/domain.BookingAlternative'
+        type: array
+      comment:
+        type: string
+      completed_at:
+        type: string
+      confirmed_at:
+        type: string
+      created_at:
+        type: string
+      date:
+        type: string
+      duration:
+        type: integer
+      guests_count:
+        type: integer
+      id:
+        type: string
+      rejected_at:
+        type: string
+      restaurant_id:
+        type: string
+      status:
+        $ref: '#/definitions/domain.BookingStatus'
+      time:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  domain.BookingAlternative:
+    properties:
+      accepted_at:
+        type: string
+      booking_id:
+        type: string
+      created_at:
+        type: string
+      date:
+        type: string
+      id:
+        type: string
+      message:
+        type: string
+      rejected_at:
+        type: string
+      time:
+        type: string
+    type: object
+  domain.BookingStatus:
+    enum:
+    - pending
+    - confirmed
+    - rejected
+    - cancelled
+    - completed
+    type: string
+    x-enum-varnames:
+    - BookingStatusPending
+    - BookingStatusConfirmed
+    - BookingStatusRejected
+    - BookingStatusCancelled
+    - BookingStatusCompleted
+  domain.Fact:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      restaurant_id:
+        type: string
+    type: object
+  domain.Notification:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      is_read:
+        type: boolean
+      message:
+        type: string
+      recipient_id:
+        type: string
+      recipient_type:
+        $ref: '#/definitions/domain.RecipientType'
+      related_id:
+        type: string
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/domain.NotificationType'
+    type: object
+  domain.NotificationType:
+    enum:
+    - new_booking
+    - booking_confirmed
+    - booking_rejected
+    - booking_cancelled
+    - alternative_offer
+    - alternative_accepted
+    - alternative_rejected
+    type: string
+    x-enum-varnames:
+    - NotificationTypeNewBooking
+    - NotificationTypeBookingConfirmed
+    - NotificationTypeBookingRejected
+    - NotificationTypeBookingCancelled
+    - NotificationTypeAlternativeOffer
+    - NotificationTypeAlternativeAccepted
+    - NotificationTypeAlternativeRejected
+  domain.RecipientType:
+    enum:
+    - user
+    - restaurant
+    type: string
+    x-enum-varnames:
+    - RecipientTypeUser
+    - RecipientTypeRestaurant
+  domain.Restaurant:
+    properties:
+      address:
+        type: string
+      contact_email:
+        type: string
+      contact_phone:
+        type: string
+      created_at:
+        type: string
+      cuisine:
+        type: string
+      description:
+        type: string
+      facts:
+        items:
+          $ref: '#/definitions/domain.Fact'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  domain.WeekDay:
+    enum:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    type: integer
+    x-enum-varnames:
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    - Saturday
+    - Sunday
+  domain.WorkingHours:
+    properties:
+      close_time:
+        type: string
+      id:
+        type: string
+      is_closed:
+        type: boolean
+      open_time:
+        type: string
+      restaurant_id:
+        type: string
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+      week_day:
+        $ref: '#/definitions/domain.WeekDay'
+    type: object
+  handlers.AddFactRequest:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
+  handlers.CreateBookingRequest:
+    properties:
+      comment:
+        type: string
+      date:
+        type: string
+      duration:
+        minimum: 30
+        type: integer
+      guests_count:
+        minimum: 1
+        type: integer
+      restaurant_id:
+        type: string
+      time:
+        type: string
+      user_id:
+        type: string
+    required:
+    - date
+    - duration
+    - guests_count
+    - restaurant_id
+    - time
+    - user_id
+    type: object
+  handlers.CreateRestaurantRequest:
+    properties:
+      address:
+        type: string
+      contact_email:
+        type: string
+      contact_phone:
+        type: string
+      cuisine:
+        type: string
+      description:
+        type: string
+      facts:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+    required:
+    - address
+    - contact_email
+    - contact_phone
+    - cuisine
+    - name
+    type: object
+  handlers.CreateUserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    - phone
+    type: object
+  handlers.RejectBookingRequest:
+    properties:
+      reason:
+        type: string
+    required:
+    - reason
+    type: object
+  handlers.SetAvailabilityRequest:
+    properties:
+      capacity:
+        minimum: 1
+        type: integer
+      date:
+        type: string
+      time_slot:
+        type: string
+    required:
+    - capacity
+    - date
+    - time_slot
+    type: object
+  handlers.SetWorkingHoursRequest:
+    properties:
+      close_time:
+        type: string
+      open_time:
+        type: string
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+      week_day:
+        $ref: '#/definitions/domain.WeekDay'
+    required:
+    - close_time
+    - open_time
+    - week_day
+    type: object
+  handlers.SuggestAlternativeTimeRequest:
+    properties:
+      date:
+        type: string
+      message:
+        type: string
+      time:
+        type: string
+    required:
+    - date
+    - time
+    type: object
+  handlers.UpdateRestaurantRequest:
+    properties:
+      address:
+        type: string
+      contact_email:
+        type: string
+      contact_phone:
+        type: string
+      cuisine:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - address
+    - contact_email
+    - contact_phone
+    - cuisine
+    - name
+    type: object
+  handlers.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - name
+    - phone
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@restaurant-booking.com
+    name: API Support
+  description: API для системы бронирования ресторанов
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Restaurant Booking API
+  version: "1.0"
+paths:
+  /bookings:
+    post:
+      consumes:
+      - application/json
+      description: Create a new booking for a restaurant
+      parameters:
+      - description: Booking data
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateBookingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant or user not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Not enough seats at the specified time
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create booking
+      tags:
+      - bookings
+  /bookings/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information about a booking by ID
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get booking
+      tags:
+      - bookings
+  /bookings/{id}/alternative:
+    post:
+      consumes:
+      - application/json
+      description: Restaurant suggests an alternative time for a booking
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Alternative time data
+        in: body
+        name: alternative_time
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SuggestAlternativeTimeRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Cannot suggest alternative time in current status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Suggest alternative time
+      tags:
+      - bookings
+  /bookings/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancel a booking by the user
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Cannot cancel booking in current status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Cancel booking
+      tags:
+      - bookings
+  /bookings/{id}/complete:
+    post:
+      consumes:
+      - application/json
+      description: Mark a booking as completed
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Cannot complete booking in current status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Complete booking
+      tags:
+      - bookings
+  /bookings/{id}/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm a booking by the restaurant
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Cannot confirm booking in current status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Confirm booking
+      tags:
+      - bookings
+  /bookings/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Reject a booking by the restaurant with a reason
+      parameters:
+      - description: Booking ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Rejection reason
+        in: body
+        name: reason
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RejectBookingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Booking not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Cannot reject booking in current status
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reject booking
+      tags:
+      - bookings
+  /bookings/alternatives/{id}/accept:
+    post:
+      consumes:
+      - application/json
+      description: User accepts the suggested alternative time
+      parameters:
+      - description: Alternative ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Alternative not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Accept alternative
+      tags:
+      - bookings
+  /bookings/alternatives/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: User rejects the suggested alternative time
+      parameters:
+      - description: Alternative ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Alternative not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Reject alternative
+      tags:
+      - bookings
+  /facts/random:
+    get:
+      consumes:
+      - application/json
+      description: Get a collection of random facts about restaurants
+      parameters:
+      - default: 3
+        description: Number of facts to return
+        in: query
+        name: count
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Fact'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get random facts
+      tags:
+      - facts
+  /restaurants:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all restaurants with optional pagination
+      parameters:
+      - default: 0
+        description: Offset
+        in: query
+        name: offset
+        type: integer
+      - default: 20
+        description: Limit
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Restaurant'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List restaurants
+      tags:
+      - restaurants
+    post:
+      consumes:
+      - application/json
+      description: Create a new restaurant
+      parameters:
+      - description: Restaurant data
+        in: body
+        name: restaurant
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateRestaurantRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Restaurant'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create restaurant
+      tags:
+      - restaurants
+  /restaurants/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete restaurant by ID
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete restaurant
+      tags:
+      - restaurants
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information about a restaurant by ID
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Restaurant'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get restaurant
+      tags:
+      - restaurants
+    put:
+      consumes:
+      - application/json
+      description: Update an existing restaurant
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Restaurant data
+        in: body
+        name: restaurant
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateRestaurantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Restaurant'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update restaurant
+      tags:
+      - restaurants
+  /restaurants/{id}/availability:
+    get:
+      consumes:
+      - application/json
+      description: Get availability for a restaurant on a specific date
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Date (YYYY-MM-DD)
+        in: query
+        name: date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Availability'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get availability
+      tags:
+      - restaurants
+      - availability
+    post:
+      consumes:
+      - application/json
+      description: Set availability for a specific date and time
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Availability data
+        in: body
+        name: availability
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SetAvailabilityRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Availability'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Set availability
+      tags:
+      - restaurants
+      - availability
+  /restaurants/{id}/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Get all bookings for a specific restaurant
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Booking status (pending,confirmed,rejected,canceled,completed)
+        in: query
+        name: status
+        type: string
+      - description: Date (YYYY-MM-DD)
+        in: query
+        name: date
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Booking'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get restaurant bookings
+      tags:
+      - restaurants
+      - bookings
+  /restaurants/{id}/facts:
+    get:
+      consumes:
+      - application/json
+      description: Get all interesting facts about a restaurant
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Fact'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get facts
+      tags:
+      - restaurants
+      - facts
+    post:
+      consumes:
+      - application/json
+      description: Add an interesting fact about a restaurant
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Fact content
+        in: body
+        name: fact
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.AddFactRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Fact'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add fact
+      tags:
+      - restaurants
+      - facts
+  /restaurants/{id}/working-hours:
+    get:
+      consumes:
+      - application/json
+      description: Get working hours of a restaurant
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.WorkingHours'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get working hours
+      tags:
+      - restaurants
+      - working-hours
+    post:
+      consumes:
+      - application/json
+      description: Set working hours for a restaurant
+      parameters:
+      - description: Restaurant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Working hours data
+        in: body
+        name: working_hours
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SetWorkingHoursRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.WorkingHours'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Restaurant not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Set working hours
+      tags:
+      - restaurants
+      - working-hours
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.User'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Email already exists
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update an existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.User'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Email already exists
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update user
+      tags:
+      - users
+  /users/{id}/bookings:
+    get:
+      consumes:
+      - application/json
+      description: Get all bookings of a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Booking'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user bookings
+      tags:
+      - users
+      - bookings
+  /users/{id}/notifications:
+    get:
+      consumes:
+      - application/json
+      description: Get all notifications of a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Notification'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user notifications
+      tags:
+      - users
+      - notifications
+schemes:
+- http
+- https
+swagger: "2.0"

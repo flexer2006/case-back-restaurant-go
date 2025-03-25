@@ -1,0 +1,129 @@
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@date = 2023-04-15
+
+### Step 1: Create a restaurant
+# @name createRestaurant
+POST {{baseUrl}}/restaurants
+Content-Type: application/json
+
+{
+  "name": "La Trattoria",
+  "address": "123 Main Street, New York, NY 10001",
+  "cuisine": "Italian",
+  "description": "Authentic Italian cuisine in the heart of New York",
+  "contact_email": "info@latrattoria.com",
+  "contact_phone": "+1 (212) 555-1234",
+  "facts": [
+    "Our pasta is made fresh daily",
+    "We use only organic ingredients",
+    "Our chef trained in Naples for 15 years"
+  ]
+}
+
+### Extract restaurant ID from response
+@restaurantId = {{createRestaurant.response.body.id}}
+
+### Step 2: Set working hours for the restaurant
+POST {{baseUrl}}/restaurants/{{restaurantId}}/working-hours
+Content-Type: application/json
+
+{
+  "week_day": 6,
+  "open_time": "10:00",
+  "close_time": "22:00",
+  "valid_from": "2023-01-01",
+  "valid_to": "2023-12-31"
+}
+
+### Step 3: Set availability for the restaurant
+POST {{baseUrl}}/restaurants/{{restaurantId}}/availability
+Content-Type: application/json
+
+{
+  "date": "{{date}}",
+  "time_slot": "19:00",
+  "capacity": 20
+}
+
+### Step 4: Create a user
+# @name createUser
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1 (212) 555-6789"
+}
+
+### Extract user ID from response
+@userId = {{createUser.response.body.id}}
+
+### Step 5: Create a booking
+# @name createBooking
+POST {{baseUrl}}/bookings
+Content-Type: application/json
+
+{
+  "restaurant_id": "{{restaurantId}}",
+  "user_id": "{{userId}}",
+  "date": "{{date}}",
+  "time": "19:00",
+  "duration": 120,
+  "guests_count": 4,
+  "comment": "Would like a table near the window if possible"
+}
+
+### Extract booking ID from response
+@bookingId = {{createBooking.response.body.id}}
+
+### Step 6: Get booking details
+GET {{baseUrl}}/bookings/{{bookingId}}
+Accept: application/json
+
+### Step 7: Confirm booking
+POST {{baseUrl}}/bookings/{{bookingId}}/confirm
+Accept: application/json
+
+### Step 8: Get user notifications
+GET {{baseUrl}}/users/{{userId}}/notifications
+Accept: application/json
+
+### Step 9: Complete booking
+POST {{baseUrl}}/bookings/{{bookingId}}/complete
+Accept: application/json
+
+### Step 10: Get restaurant bookings (should show the completed booking)
+GET {{baseUrl}}/restaurants/{{restaurantId}}/bookings?status=completed
+Accept: application/json
+
+### Alternative Flow - Scenario 1: Reject booking instead of confirming
+
+### Step 6.1 (alternative): Reject booking
+POST {{baseUrl}}/bookings/{{bookingId}}/reject
+Content-Type: application/json
+
+{
+  "reason": "Unfortunately, we are fully booked at that time"
+}
+
+### Alternative Flow - Scenario 2: Suggest alternative time
+
+### Step 6.2 (alternative): Suggest alternative time
+# @name suggestAlternative
+POST {{baseUrl}}/bookings/{{bookingId}}/alternative
+Content-Type: application/json
+
+{
+  "date": "{{date}}",
+  "time": "20:30",
+  "message": "Unfortunately, all tables at 19:00 are booked. We suggest a time at 20:30."
+}
+
+### Extract alternative ID from response (from the alternatives array)
+@alternativeId = {{suggestAlternative.response.body.alternatives[0].id}}
+
+### Step 7.2 (alternative): Accept alternative
+POST {{baseUrl}}/bookings/alternatives/{{alternativeId}}/accept
+Accept: application/json 

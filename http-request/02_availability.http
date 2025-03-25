@@ -1,0 +1,42 @@
+### Variables
+@baseUrl = http://localhost:8080/api/v1
+@restaurantId = replace_with_restaurant_id
+@date = 2023-04-15
+
+### Set availability for a specific date and time
+POST {{baseUrl}}/restaurants/{{restaurantId}}/availability
+Content-Type: application/json
+
+{
+  "date": "2025-04-15T00:00:00Z",
+  "time_slot": "19:00",
+  "capacity": 20
+}
+
+### Set availability for a different time slot
+POST {{baseUrl}}/restaurants/{{restaurantId}}/availability
+Content-Type: application/json
+
+{
+  "date": "{{date}}",
+  "time_slot": "20:00",
+  "capacity": 15
+}
+
+### Set availability for another time slot
+POST {{baseUrl}}/restaurants/{{restaurantId}}/availability
+Content-Type: application/json
+
+{
+  "date": "{{date}}",
+  "time_slot": "21:00",
+  "capacity": 10
+}
+
+### Get availability for a specific date
+GET {{baseUrl}}/restaurants/{{restaurantId}}/availability?date={{date}}
+Accept: application/json
+
+### Get availability without specifying a date (should return for current date)
+GET {{baseUrl}}/restaurants/{{restaurantId}}/availability
+Accept: application/json 
