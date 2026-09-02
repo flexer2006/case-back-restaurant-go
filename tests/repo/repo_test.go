@@ -55,7 +55,7 @@ type MockDBExecutor struct {
 	mock.Mock
 }
 
-func (m *MockDBExecutor) Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error) {
+func (m *MockDBExecutor) Exec(ctx context.Context, sql string, arguments ...any) (pgconn.CommandTag, error) {
 	args := m.Called(ctx, sql, arguments)
 	if args.Get(0) == nil {
 		return pgconn.CommandTag{}, args.Error(1)
@@ -63,7 +63,7 @@ func (m *MockDBExecutor) Exec(ctx context.Context, sql string, arguments ...inte
 	return args.Get(0).(pgconn.CommandTag), args.Error(1)
 }
 
-func (m *MockDBExecutor) Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error) {
+func (m *MockDBExecutor) Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error) {
 	mockArgs := m.Called(ctx, sql, args)
 	if mockArgs.Get(0) == nil {
 		return nil, mockArgs.Error(1)
@@ -71,7 +71,7 @@ func (m *MockDBExecutor) Query(ctx context.Context, sql string, args ...interfac
 	return mockArgs.Get(0).(pgx.Rows), mockArgs.Error(1)
 }
 
-func (m *MockDBExecutor) QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row {
+func (m *MockDBExecutor) QueryRow(ctx context.Context, sql string, args ...any) pgx.Row {
 	mockArgs := m.Called(ctx, sql, args)
 	return mockArgs.Get(0).(pgx.Row)
 }
@@ -124,7 +124,7 @@ type MockRow struct {
 	mock.Mock
 }
 
-func (m *MockRow) Scan(dest ...interface{}) error {
+func (m *MockRow) Scan(dest ...any) error {
 	args := m.Called(dest)
 	return args.Error(0)
 }
@@ -157,14 +157,14 @@ func (m *MockRows) Next() bool {
 	return args.Bool(0)
 }
 
-func (m *MockRows) Scan(dest ...interface{}) error {
+func (m *MockRows) Scan(dest ...any) error {
 	args := m.Called(dest)
 	return args.Error(0)
 }
 
-func (m *MockRows) Values() ([]interface{}, error) {
+func (m *MockRows) Values() ([]any, error) {
 	args := m.Called()
-	return args.Get(0).([]interface{}), args.Error(1)
+	return args.Get(0).([]any), args.Error(1)
 }
 
 func (m *MockRows) RawValues() [][]byte {

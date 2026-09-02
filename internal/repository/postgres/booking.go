@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/flexer2006/case-back-restaurant-go/common"
@@ -131,7 +132,7 @@ func (r *BookingRepository) scanBooking(rows pgx.Rows) (*domain.Booking, error) 
 	return &booking, nil
 }
 
-func (r *BookingRepository) getBookingsByQuery(ctx context.Context, query string, args ...interface{}) ([]*domain.Booking, error) {
+func (r *BookingRepository) getBookingsByQuery(ctx context.Context, query string, args ...any) ([]*domain.Booking, error) {
 	log, _ := logger.FromContext(ctx)
 
 	executor, release, err := r.GetExecutor(ctx)
@@ -300,7 +301,7 @@ func (r *BookingRepository) UpdateStatus(ctx context.Context, id string, status 
 		}
 
 		query := "UPDATE bookings SET status = $2, updated_at = $3"
-		args := []interface{}{id, status, time.Now()}
+		args := []any{id, status, time.Now()}
 
 		switch status {
 		case domain.BookingStatusPending:
@@ -625,11 +626,5 @@ func isValidStatus(status domain.BookingStatus) bool {
 		domain.BookingStatusCompleted,
 	}
 
-	for _, s := range validStatuses {
-		if s == status {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(validStatuses, status)
 }

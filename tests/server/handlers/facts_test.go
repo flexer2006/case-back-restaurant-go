@@ -145,7 +145,7 @@ func TestGetRandomFacts_WithCount(t *testing.T) {
 	err = json.NewDecoder(resp.Body).Decode(&respFacts)
 	require.NoError(t, err)
 	assert.Len(t, respFacts, 5)
-	for i := 0; i < 5; i++ {
+	for i := range 5 {
 		assert.Equal(t, facts[i].ID, respFacts[i].ID)
 	}
 

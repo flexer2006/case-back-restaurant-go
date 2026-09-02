@@ -85,8 +85,7 @@ func NewServer(
 				log = defaultLog
 			}
 
-			var fiberErr *fiber.Error
-			if errors.As(err, &fiberErr) {
+			if fiberErr, ok := errors.AsType[*fiber.Error](err); ok {
 				code = fiberErr.Code
 			}
 

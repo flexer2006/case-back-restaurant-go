@@ -4,7 +4,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func Fields(keysAndValues ...interface{}) []zap.Field {
+func Fields(keysAndValues ...any) []zap.Field {
 	fields := make([]zap.Field, 0, len(keysAndValues)/2)
 
 	for i := 0; i < len(keysAndValues); i += 2 {
